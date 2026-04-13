@@ -13,5 +13,5 @@ Current supported search methods:
 2. Depth-first search: ```search problem.txt dfs```
 3. Greedy-best-first search: ```search problem.txt gbfs```
 4. A-star search: ```search problem.txt as```
-5. Bi-directional search: ```search problem.txt cus1```
+5. Iterative deepening depth-first search: ```search problem.txt cus1```
 6. Recursive-best-first-search: ```search problem.txt cus2```
