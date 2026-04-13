@@ -78,7 +78,7 @@ def heuristic(nodes, node, destinations):
     """
     nx, ny = nodes[node]
     return min(
-        math.sqrt((nx - nodes[d][0])*2 + (ny - nodes[d][1])*2)
+        math.sqrt((nx - nodes[d][0])**2 + (ny - nodes[d][1])**2)
         for d in destinations
     )
 
