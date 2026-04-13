@@ -1,8 +1,10 @@
 import sys
+import math
 import matplotlib
 matplotlib.use('Agg')  # non-interactive backend, safe for batch/CLI
 import matplotlib.pyplot as plt
-from search import Problem, breadth_first_graph_search
+from utils import memoize
+from search import (Problem, breadth_first_graph_search, depth_first_graph_search, greedy_best_first_graph_search, astar_search, recursive_best_first_search, iterative_deepening_search)
 
 
 # CLI arguements
@@ -56,6 +58,20 @@ with open(filename, 'r') as f:
             edges[frm].append((to, w))
             graph[frm].append(to)
 
+#heuristics for Greedy best first and A*, euclidian distance used as we have node coordinates
+def euclidean_heuristic(goal_nodes):
+    def h(node):
+        # node.state is the current node ID e.g. '3'
+        if node.state not in nodes or not goal_nodes:
+            return 0
+        # if multiple goals, take the minimum distance to any goal
+        return min(
+            math.sqrt((nodes[node.state][0] - nodes[g][0])**2 +
+                      (nodes[node.state][1] - nodes[g][1])**2)
+            for g in goal_nodes
+        )
+    return h
+
 # graph visualizer
 def draw_graph(nodes, graph):
     plt.figure()
@@ -96,11 +112,15 @@ class GraphProblem(Problem):
 # Run the selected search method
 problem = GraphProblem(start, goal)
 
+heuristic = euclidean_heuristic(goal if isinstance(goal, list) else [goal])
+
 methods = {
-    'bfs': breadth_first_graph_search,
-    # add more methods here later, e.g.:
-    # 'dfs': depth_first_graph_search,
-    # 'astar': astar_search,
+    'bfs' : lambda p: breadth_first_graph_search(p),
+    'dfs' : lambda p: depth_first_graph_search(p),
+    'gbfs' : lambda p: greedy_best_first_graph_search(p, heuristic),
+    'as' : lambda p: astar_search(p, heuristic),
+    'cus1' : lambda p: iterative_deepening_search(p),
+    'cus2' : lambda p: recursive_best_first_search(p, heuristic)
 }
 
 if method not in methods:
