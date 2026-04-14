@@ -6,6 +6,8 @@ Frederick Bartholomew Dao Xiang SII, 104397146
 
 Izzat Dasuki Bin Mohamad Hamzah, 104397971
 
+Zaferah Banu binti Mohamed Shaik Fareed
+
 # Usage
 1. Navigate to ./Example Code/ in CLI
 2. Run the markdown commands below
