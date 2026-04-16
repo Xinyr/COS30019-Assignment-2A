@@ -6,10 +6,10 @@ Frederick Bartholomew Dao Xiang SII, 104397146
 
 Izzat Dasuki Bin Mohamad Hamzah, 104397971
 
-Zaferah Banu binti Mohamed Shaik Fareed
+Zaferah Banu binti Mohamed Shaik Fareed, 102779917 
 
 # Usage
-1. Navigate to ./Example Code/ in CLI
+1. Navigate to ./program/ in CLI
 2. Run the markdown commands below
 
 Current supported search methods:
