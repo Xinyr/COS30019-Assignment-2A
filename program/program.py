@@ -146,7 +146,6 @@ class GraphProblem(Problem):
         return state in self.goals
 
 
-
 # ─────────────────────────────────────────────
 # SEARCH METHOD DISPATCHER
 # ─────────────────────────────────────────────
@@ -167,62 +166,6 @@ if method not in methods:
     print(f"Unknown method '{method}'. Available: {[m.upper() for m in methods.keys()]}")
     sys.exit(1)
 
-# ─────────────────────────────────────────────
-# DRAW GRAPHS OF SEARCH SOLUTIONS
-# ─────────────────────────────────────────────
-
-def draw_solution(nodes, edges, path, filename, method):
-    plt.figure()
-    
-    # Draw all edges in default colour first
-    for node in edges:
-        for neighbor, weight in edges[node]:
-            x1, y1 = nodes[node]
-            x2, y2 = nodes[neighbor]
-            plt.plot([x1, x2], [y1, y2], 'b-', linewidth=1, alpha=0.3)
-            mx, my = (x1 + x2) / 2, (y1 + y2) / 2
-            plt.text(mx, my, str(weight), color='gray', fontsize=8)
-
-    # Draw path edges in red on top
-    for i in range(len(path) - 1):
-        curr, next_ = path[i], path[i + 1]
-        x1, y1 = nodes[curr]
-        x2, y2 = nodes[next_]
-        plt.plot([x1, x2], [y1, y2], 'r-', linewidth=3)
-
-    # Draw all nodes
-    for node, (x, y) in nodes.items():
-        if node == path[0]:
-            color = 'green'   # start node
-        elif node == path[-1]:
-            color = 'red'     # goal node
-        elif node in path:
-            color = 'orange'  # visited path nodes
-        else:
-            color = 'steelblue'  # unvisited nodes
-        plt.scatter(x, y, s=600, color=color, zorder=5)
-        plt.text(x, y, node, ha='center', va='center', color='white', fontweight='bold')
-
-    # Add a legend
-    from matplotlib.lines import Line2D
-    legend = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='green',    markersize=10, label='Start'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='red',      markersize=10, label='Goal'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='orange',   markersize=10, label='On path'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='steelblue',markersize=10, label='Unvisited'),
-        Line2D([0], [0], color='red',      linewidth=3, label='Solution path'),
-        Line2D([0], [0], color='blue',     linewidth=1, alpha=0.3, label='Other edges'),
-    ]
-    plt.legend(handles=legend, loc='upper left')
-
-    plt.title(f"Solution path using {method.upper()}")
-    plt.axis('equal')
-
-    # Save with method name so each run produces a unique file
-    output_name = f"solution_{method}.png"
-    plt.savefig(output_name)
-    plt.close()
-    print(f"Solution graph saved to {output_name}")
 
 # ─────────────────────────────────────────────
 # RUN SEARCH & PRINT RESULT
@@ -235,17 +178,19 @@ def draw_solution(nodes, edges, path, filename, method):
 solution = methods[method](problem)
 
 if solution:
-    path      = solution.solution()
+    path = solution.solution()
     num_nodes = len(solution.path())
-    reached   = path[-1]  # the goal node that was reached
-    full_path = [start] + path
-    
+
+    if len(path) == 0:
+        reached = start
+        final_path = start
+    else:
+        reached = path[-1]
+        final_path = ' -> '.join([start] + path)
+
     print(f"{filename} {method.upper()}")
     print(f"{reached} {num_nodes}")
-    print(' -> '.join([start] + path))
-    
-    draw_solution(nodes, edges, full_path, filename, method)
+    print(final_path)
 else:
     print(f"{filename} {method.upper()}")
     print("No path found")
-
